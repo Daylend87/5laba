@@ -4,9 +4,9 @@ DOMAINS
 PREDICATES
     nondeterm input_list_size(integer)
     nondeterm input_list_elements(integer, int_list)
-    nondeterm calculate_min(int_list, integer, integer, integer)
+    nondeterm calculate_min(int_list, integer, integer)
     nondeterm get_min(int_list, integer)
-    nondeterm calculate_max(int_list, integer, integer, integer)
+    nondeterm calculate_max(int_list, integer, integer)
     nondeterm get_max(int_list, integer)
 
 CLAUSES
@@ -21,33 +21,25 @@ CLAUSES
         NextRemaining = Remaining - 1,
         input_list_elements(NextRemaining, Rest).
 
-    calculate_min([], CurrentMin, _, CurrentMin) :- !.
-    calculate_min([Head|Tail], TempMin, TempCount, FinalMin) :-
+    calculate_min([], CurrentMin, CurrentMin) :- !.
+    calculate_min([Head|Tail], TempMin, FinalMin) :-
         Head < TempMin, !,
-        calculate_min(Tail, Head, 1, FinalMin).
-    calculate_min([Head|Tail], TempMin, TempCount, FinalMin) :-
-        Head = TempMin, !,
-        UpdatedCount = TempCount + 1,
-        calculate_min(Tail, TempMin, UpdatedCount, FinalMin).
-    calculate_min([_|Tail], TempMin, TempCount, FinalMin) :-
-        calculate_min(Tail, TempMin, TempCount, FinalMin).
+        calculate_min(Tail, Head, FinalMin).
+    calculate_min([Head|Tail], TempMin, FinalMin) :-
+        calculate_min(Tail, TempMin, FinalMin).
 
     get_min([FirstElement|RestList], MinValue) :-
-        calculate_min(RestList, FirstElement, 1, MinValue).
+        calculate_min(RestList, FirstElement, MinValue).
 
-    calculate_max([], CurrentMax, _, CurrentMax) :- !.
-    calculate_max([Head|Tail], TempMax, TempCount, FinalMax) :-
+    calculate_max([], CurrentMax, CurrentMax) :- !.
+    calculate_max([Head|Tail], TempMax, FinalMax) :-
         Head > TempMax, !,
-        calculate_max(Tail, Head, 1, FinalMax).
-    calculate_max([Head|Tail], TempMax, TempCount, FinalMax) :-
-        Head = TempMax, !,
-        UpdatedCount = TempCount + 1,
-        calculate_max(Tail, TempMax, UpdatedCount, FinalMax).
-    calculate_max([_|Tail], TempMax, TempCount, FinalMax) :-
-        calculate_max(Tail, TempMax, TempCount, FinalMax).
+        calculate_max(Tail, Head, FinalMax).
+    calculate_max([Head|Tail], TempMax, FinalMax) :-
+        calculate_max(Tail, TempMax, FinalMax).
 
     get_max([FirstElement|RestList], MaxValue) :-
-        calculate_max(RestList, FirstElement, 1, MaxValue).
+        calculate_max(RestList, FirstElement, MaxValue).
 
 GOAL
     input_list_size(Size),
